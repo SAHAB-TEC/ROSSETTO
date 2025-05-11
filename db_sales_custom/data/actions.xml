@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="model_manual_delivered_action" model="ir.actions.server">
+        <field name="name">تم التسليم يدويا</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_delivered()
+        </field>
+    </record>
+
+    <record id="model_manual_confirm_action" model="ir.actions.server">
+        <field name="name">قيد التوصيل يدويا</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_sale()
+        </field>
+    </record>
+
+    <record id="model_manual_return_action" model="ir.actions.server">
+        <field name="name">أرجاع يدويا</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_return()
+        </field>
+    </record>
+
+    <record id="model_manual_cancel_action" model="ir.actions.server">
+        <field name="name">الغاء يدويا</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_cancel_sale()
+        </field>
+    </record>
+
+    <record id="model_confirm_action" model="ir.actions.server">
+        <field name="name">قيد التوصيل</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_quick_confirm()
+        </field>
+    </record>
+    <record id="model_send_action" model="ir.actions.server">
+        <field name="name">قيد التسليم</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_done_all()
+        </field>
+    </record>
+    <record id="model_return_action" model="ir.actions.server">
+        <field name="name">أرجاع</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_return_delivery()
+        </field>
+    </record>
+</odoo>

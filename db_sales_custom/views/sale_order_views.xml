@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="sales_data_search" model="ir.ui.view">
+            <field name="name">sale.order</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="delivery_address"/>
+                    <field name="mobile_number"/>
+                    <field name="mobile_number2"/>
+                    <field name="sales_representative_id"/>
+                    <field name="source_id"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_order_trees" model="ir.ui.view">
+            <field name="name">view.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="sale_state"/>
+                </xpath>
+                <xpath expr="//field[@name='create_date']" position="after">
+                    <field name="sale_delivery_date"  optional="show"/>
+                    <field name="sale_receipt_date"  optional="show"/>
+                    <field name="sale_return_date"  optional="show"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_phone"/>
+                </xpath>
+<!--                <xpath expr="//field[@name='state']" position="replace">-->
+<!--                    <field name="is_package" invisible=""/>-->
+<!--                    <field name="state" attrs="{'invisible': [('is_package', '=', True)]}"/>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='state']" position="before">
+                    <field name="delivery_address"/>
+                    <field name="mobile_number"/>
+                    <field name="mobile_number2"/>
+                    <field name="sales_representative_id"/>
+                    <field name="source_id"/>
+                    <button name="action_quick_confirm" class="oe_highlight"
+                            string=" قيد التوصيل " type="object"/>
+                    <button name="action_done_all" class="oe_highlight"
+                            string=" تسليم " type="object" attrs="{'readonly': [('state', '!=', 'delivered')]}"/>
+                    <button name="action_return_delivery" class="oe_highlight" string="أرجاع"
+                            attrs="{'readonly': [('state', '!=', 'delivered')]}" type="object"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_order_tree_custom" model="ir.ui.view">
+            <field name="name">view.order.tree.custom</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner_phone"/>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="before">
+                    <field name="delivery_address"/>
+                    <field name="mobile_number"/>
+                    <field name="mobile_number2"/>
+                    <field name="sales_representative_id"/>
+                    <button name="action_done_all" class="oe_highlight"
+                            string="تسليم" type="object" attrs="{'readonly': [('state', '!=', 'delivered')]}"/>
+                    <button name="action_return_delivery" class="oe_highlight" string="أرجاع"
+                            attrs="{'readonly': [('state', '!=', 'delivered')]}" type="object"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_packages_quotation_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="priority">4</field>
+        <field name="arch" type="xml">
+            <tree string="Quotation" class="o_sale_order" sample="1"
+                decoration-info="state in ['draft', 'sent']"
+                decoration-muted="state == 'cancel'">
+                <field name="name" string="Number" readonly="1" decoration-bf="1"/>
+                <field name="create_date" string="Creation Date" widget="date" optional="show"/>
+                <field name="sale_delivery_date" widget="date" optional="show"/>
+                <field name="sale_receipt_date" widget="date" optional="show"/>
+                <field name="sale_return_date" widget="date" optional="show"/>
+                <field name="commitment_date" widget="date" optional="hide"/>
+                <field name="expected_date" widget="date" optional="hide"/>
+                <field name="partner_id" readonly="1"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="activity_ids" widget="list_activity" optional="show"/>
+                <field name="team_id" optional="hide"/>
+                <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
+                <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
+                <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
+                <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>
+                <field name="invoice_status" optional="hide"/>
+                <field name="message_needaction" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="delivery_address"/>
+                    <field name="partner_phone"/>
+                    <field name="mobile_number"/>
+                    <field name="mobile_number2"/>
+                    <field name="sales_representative_id"/>
+                <field name="source_id"/>
+                    <button name="action_done_all" class="oe_highlight"
+                            string="تسليم" type="object" attrs="{'readonly': [('state', '!=', 'delivered')]}"/>
+                    <button name="action_return_delivery" class="oe_highlight" string="أرجاع"
+                            attrs="{'readonly': [('state', '!=', 'delivered')]}" type="object"/>
+            </tree>
+        </field>
+    </record>
+
+        <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+            <field name="domain">[('is_package', '=', False)]</field>
+        </record>
+        <record id="sales_action_quotations_packages" model="ir.actions.act_window">
+            <field name="name">أوامر الجملة</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="domain">[('is_package','=',True)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="db_sales_custom.view_packages_quotation_tree"/>
+        </record>
+
+        <menuitem id="sales_menu_quotations_packages" name="أوامر الجملة"
+                  parent="sale.sale_order_menu" action="db_sales_custom.sales_action_quotations_packages" sequence="10"/>
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">view.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@id='action_confirm']" position="replace">
+                    <button name="action_quick_confirm" id="action_quick_confirm" data-hotkey="v"
+                            string="قيد التوصيل" class="btn-primary" type="object" states="draft"
+                            />
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="after">
+                    <field name="sale_state" invisible="1"/>
+                    <widget name="web_ribbon" title="قيد التجهيز"
+                                attrs="{'invisible': [('sale_state', '!=', 'draft')]}"/>
+                    <widget name="web_ribbon" title="قيد التوصيل"
+                                attrs="{'invisible': [('sale_state', '!=', 'sale')]}"/>
+                    <widget name="web_ribbon" title="تم التسليم"
+                                attrs="{'invisible': [('sale_state', '!=', 'delivered')]}"/>
+                    <widget name="web_ribbon" title="تم الارجاع"
+                                attrs="{'invisible': [('sale_state', '!=', 'returned')]}"/>
+                    <widget name="web_ribbon" title="تم الالغاء"
+                                attrs="{'invisible': [('sale_state', '!=', 'cancel')]}"/>
+
+                </xpath>
+                <xpath expr="//button[@name='action_confirm']" position="replace"/>
+                <xpath expr="//header" position="inside">
+                    <button name="action_done_all" id="action_done_all" data-hotkey="v"
+                            string="تسليم" class="btn-primary" type="object"
+                            attrs="{'invisible': [('state', '!=', 'sale')]}"/>
+                    <button name="action_return_delivery" id="action_return_delivery" data-hotkey="v"
+                            string="أرجاع" class="btn-primary" type="object"
+                            attrs="{'invisible': ['|',('state', '=', 'draft'),('state', '=', 'returned')]}"/>
+                    <button name="action_package" id="action_package" data-hotkey="v"
+                            string="جملة" class="btn-primary" type="object"
+                            attrs="{'invisible': ['|',('state', '!=', 'draft'),('is_package', '=', True)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="replace">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sale,delivered,returned"/>
+                </xpath>
+<!--                <xpath expr="//button[@id='create_invoice']" position="replace">-->
+<!--                    <button id="create_invoice" name="574" string="Create Invoice" type="action" class="btn-primary"-->
+<!--                            states="sale"-->
+<!--                            data-hotkey="q" attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="delivery_address"/>
+                    <field name="mobile_number" widget="phone"/>
+                    <field name="mobile_number2" widget="phone"/>
+                    <field name="sales_representative_id" required="1"/>
+                    <field name="is_package" readonly="1"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                    <field name="partner_id2"/>
+                    <field name="source_id"/>
+                </xpath>
+                <xpath expr="//group[@name='sale_total']" position="inside">
+
+                </xpath>
+                <xpath expr="//group[@name='note_group']" position="before">
+                        <br/><br/><br/><br/><br/><br/><br/><br/>
+                        <div class="oe_right">
+                            <label for="total_qty"/>
+                            <field name="total_qty" colspan="2"/>
+                            <br/><br/>
+                            <label for="total_lines"/>
+                            <field name="total_lines" colspan="2"/>
+                        </div>
+                 </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="before">
+                    <field name="can_edit_price" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
+                    <attribute name="attrs">{'readonly':[('can_edit_price','=',False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                    <field name="product_available_qty" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_order_sale_group_by" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <filter name="جملة" string="جملة" domain="[('is_package','=', True)]"/>
+                    <filter string="الحالة" name="الحالة" context="{'group_by':'sale_state'}"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

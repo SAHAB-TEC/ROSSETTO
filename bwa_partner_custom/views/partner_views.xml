@@ -1,0 +1,20 @@
+<odoo>
+    <template id="simple_address" name="address" inherit_id="website_sale.address" priority="6666">
+        <xpath expr="//div[contains(@t-attf-class, 'div_street')]" position="replace">
+            <div t-attf-class="mb-3 #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street">
+                <label class="col-form-label" for="street"> Address </label>
+                <input type="text" name="street"
+                       t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}"
+                       t-att-value="'street' in checkout and checkout['street']"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[contains(@t-attf-class, 'div_zip')]" position="replace">
+            <div t-attf-class="mb-3 col-md-4 div_zip">
+                <label class="col-form-label label-optional" for="zip">Zip Code Sevooo</label>
+                <input type="text" name="zip" required="false" t-att-value="'zip' in checkout and checkout['zip']"/>
+            </div>
+            <!--            <input type="hidden" name="field_required" t-att-value="'phone,name'"/>-->
+        </xpath>
+    </template>
+
+</odoo>
