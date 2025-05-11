@@ -222,13 +222,17 @@ class SaleOrders(models.Model):
         self.sale_delivery_date = datetime.today()
 
     def action_delivery(self):
+        default_location_dest = self.company_id.so_delivery_location_id
+        if not default_location_dest:
+            raise UserError(_('Please set a default delivery location in the company settings.'))
         for rec in self:
             for line in rec.order_line:
                 if line.product_id.detailed_type == 'product' and line.product_uom_qty > line.product_id.qty_available:
                     raise ValidationError(_('Please Check This Product Qty \'%s\'.') % (line.product_id.name,))
             # rec.action_confirm()
-            default_location_dest = self.company_id.so_delivery_location_id
+
             rec.picking_ids.location_dest_id = default_location_dest
+
             for picking in rec.picking_ids:
                 for line in picking.move_ids_without_package:
                     line.quantity_done = line.product_uom_qty

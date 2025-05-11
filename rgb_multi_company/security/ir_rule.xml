@@ -15,12 +15,19 @@
             <field name="domain_force">['|', ('company_id', '=', company_id), ('company_id', '=', False)]</field>
         </record>
 
-
-        <!-- partner -->
+<!--        partner-->
         <record id="rule_show_current_company_Partner" model="ir.rule">
-            <field name="name">Show Partners of Current Company</field>
+            <field name="name">Show Partner of Current Company</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">['|', '|', ('id', 'in', user.partner_id.ids), ('company_id', '=', company_id), ('company_id', '=', False)]</field>
+            <field name="domain_force">[
+                '|',
+                '|',
+                ('company_id', '=', company_id),
+                ('company_id', '=', False),
+                ('related_user_company_ids', 'in', user.company_ids.ids),
+
+            ]</field>
         </record>
+
     </data>
 </odoo>

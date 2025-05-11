@@ -16,9 +16,7 @@
     "data": [
         "views/product_category_views.xml",
         "security/ir.model.access.csv",
-        'security/groups.xml',
-        'security/ir_rule.xml',
-
+        'security/ir_rule.xml'
     ],
     'license': 'OPL-1',
     "pre_init_hook": None,
