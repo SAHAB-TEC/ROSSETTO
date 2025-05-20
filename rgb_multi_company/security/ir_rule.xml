@@ -1,32 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- record rule to show current company products only -->
-        
-        <record id="rule_show_current_company_Products" model="ir.rule">
+
+        <!-- Custom Group for limited access -->
+        <record id="group_multi_company_limited_access" model="res.groups">
+            <field name="name">Multi Company Limited Access</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <!-- Record rule to show current company products only -->
+        <record id="rule_show_current_company_products" model="ir.rule">
             <field name="name">Show Products of Current Company</field>
             <field name="model_id" ref="product.model_product_product"/>
             <field name="domain_force">['|', ('company_id', '=', company_id), ('company_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('rgb_multi_company.group_multi_company_limited_access'))]"/>
         </record>
-        
-        <record id="rule_show_current_company_Categories" model="ir.rule">
+
+        <!-- Record rule to show current company categories only -->
+        <record id="rule_show_current_company_categories" model="ir.rule">
             <field name="name">Show Categories of Current Company</field>
             <field name="model_id" ref="product.model_product_category"/>
             <field name="domain_force">['|', ('company_id', '=', company_id), ('company_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('rgb_multi_company.group_multi_company_limited_access'))]"/>
         </record>
 
-<!--        partner-->
-        <record id="rule_show_current_company_Partner" model="ir.rule">
-            <field name="name">Show Partner of Current Company</field>
+        <!-- Record rule to show current company partners only -->
+        <record id="rule_show_current_company_partners" model="ir.rule">
+            <field name="name">Show Partners of Current Company</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">[
-                '|',
-                '|',
-                ('company_id', '=', company_id),
-                ('company_id', '=', False),
-                ('related_user_company_ids', 'in', user.company_ids.ids),
-
-            ]</field>
+            <field name="domain_force">
+                [
+                    '|',
+                    '|',
+                    '|',
+                    ('company_id', '=', company_id),
+                    ('company_id', 'in', user.company_ids.ids),
+                    ('company_id', '=', False),
+                    ('related_user_company_ids', 'in', user.company_ids.ids)
+                ]
+            </field>
+            <field name="groups" eval="[(4, ref('rgb_multi_company.group_multi_company_limited_access'))]"/>
         </record>
 
     </data>
